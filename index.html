@@ -1,6 +1,5 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Project 3: Double Hashing</title>
 <style type="text/css">
 
@@ -87,7 +86,7 @@ var TABLE_SIZE = 16;
 var cellColors = new Array( 
 	'#ff8',
 	'#f88',
-  '#00F3DA',
+  	'#00F3DA',
 	'#f8c',
 	'#c8f',
 	'#88f',
@@ -100,7 +99,7 @@ var cellColors = new Array(
 	'#88f',
 	'#8ff',
 	'#8f8',
-  '#FF73BB'
+  	'#FF73BB'
 	);
 
 function setElementValue(elementId, value) {
@@ -175,14 +174,14 @@ function clearInputValues() {
 function hashTableInsert(k) {
 	var i = 0 ;
 	var h1 = k % TABLE_SIZE; //first hash function
-   var h2 = 0;
-   var h = h1; //double hash function --> h = index
+   	var h2 = 0;
+   	var h = h1; //double hash function --> h = index
 	while ( getFromBucket(h) != "" ) { //if the slot is taken
 		colorBucketTouched(h);
 		h2 = (2 * (k % 4)) + 1; //second hash function
 		i++;
 		if (i>TABLE_SIZE) return;
-    h = (h1 + (i*h2)) % TABLE_SIZE; //slot function for double hasing
+    		h = (h1 + (i*h2)) % TABLE_SIZE; //slot function for double hasing
 	}
 	addToBucket(h,k); //add it to the hash table
 }
