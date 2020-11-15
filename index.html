@@ -1,0 +1,247 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Project 3: Double Hashing</title>
+<style type="text/css">
+
+body {
+   font-family: "Trebuchet MS", Skia, "Lucida Sans Unicode", sans-serif;
+   font-size: 15px;
+   margin: 2.5em auto 5em 5% ;
+   width: 90%; 
+}
+
+#header {
+   margin: 3em 0 ;
+   border: 3px #369;
+   border-style: solid solid ;
+   padding: 0em  2em 0 ;
+   text-align: center ;
+}
+
+#header .title {
+   font-size: 1.6em ;
+   margin-bottom: 0 ;
+}
+
+#footer {
+   margin: 3em 0 ;
+   border: 3px #369;
+   border-style: solid solid ;
+   padding: .7em ;
+   
+}
+
+#footer img { 
+   border: none ;
+}
+
+.section {
+   font-size: 1.1em ;
+   font-weight: bold ;
+}
+
+a { 
+   color: #339 ; 
+   text-decoration: none ;
+}
+
+.prebox {
+   background: #ffc; 
+   overflow: scroll; 
+}
+
+.prebox span {
+   background: #fcc ;
+}
+
+
+.bucketnumber {
+   margin-top: 4.5em; 
+   text-align: center;
+   color: #555 ;
+}
+
+.buckettext {
+   float: left; 
+   text-align: center; 
+   width: 100%; 
+   margin-top: 1em ;
+   font-size: 1.5em ;
+}
+
+.bucketbox {
+   float: left; width: 4em; height: 4em;
+}
+
+#hashtablecontainer {
+   height: 8em ;
+}
+
+--></style>
+
+<script type="text/javascript">
+
+var TABLE_SIZE = 16;
+
+var cellColors = new Array( 
+	'#ff8',
+	'#f88',
+  '#00F3DA',
+	'#f8c',
+	'#c8f',
+	'#88f',
+	'#8ff',
+	'#8f8',	
+	'#ff8',
+	'#f88',
+	'#f8c',
+	'#c8f',
+	'#88f',
+	'#8ff',
+	'#8f8',
+  '#FF73BB'
+	);
+
+function setElementValue(elementId, value) {
+	if ( document.getElementById(elementId).innerText != undefined ) {
+		document.getElementById(elementId).innerText = value;
+	} else {
+		document.getElementById(elementId).textContent = value;
+	}
+}
+
+function setCellColor(cell, color) {
+	document.getElementById(cell).style.background = color;
+}
+
+function makeBucketHTMLString(i) {
+	return '<div class="bucketbox" id="bb_'+i+'" style="background: '+cellColors[i]+';">'
+		+'<div id="bucket_'+i+'" class="buckettext"><'
+		+ '/div><div class="bucketnumber">'+i+'<'+'/div><'+'/div>';
+}
+
+
+function initElement() {
+	var el = document.getElementById("hashtablecontainer");
+	var i;
+	for (i = 0; i < TABLE_SIZE; i++) {
+		el.innerHTML = el.innerHTML + makeBucketHTMLString(i);
+	}
+}
+ 
+function setElementValue(elementId, value) {
+	if ( document.getElementById(elementId).innerText!=undefined ) {
+		document.getElementById(elementId).innerText = value;
+	} else {
+		document.getElementById(elementId).textContent = value;
+	}
+}
+
+function getElementValue(elementId) {
+	if ( document.getElementById(elementId).innerText!=undefined ) {
+		return document.getElementById(elementId).innerText;
+	} else {
+		return document.getElementById(elementId).textContent;
+	}
+}
+
+function getFromBucket(b) {
+	return getElementValue('bucket_'+b);
+}
+
+function addToBucket(b,t) {
+	setElementValue('bucket_'+b,t);
+	document.getElementById('bucket_'+b).style.color="#00DDF3";
+}
+
+function makeBucketsBlack() {
+	var i ;
+	for ( i=0;i<TABLE_SIZE;i++ )
+		document.getElementById('bucket_'+i).style.color="#000";
+}
+
+function colorBucketTouched(i) {
+	document.getElementById('bucket_'+i).style.color="#FFFFFF";
+}
+
+function clearInputValues() {
+	var i;
+	for ( i = 0; i < TABLE_SIZE; i++ ) {
+		addToBucket(i, "");
+	}
+}
+
+function hashTableInsert(k) {
+	var i = 0 ;
+	var h1 = k % TABLE_SIZE; //first hash function
+   var h2 = 0;
+   var h = h1; //double hash function --> h = index
+	while ( getFromBucket(h) != "" ) { //if the slot is taken
+		colorBucketTouched(h);
+		h2 = (2 * (k % 4)) + 1; //second hash function
+		i++;
+		if (i>TABLE_SIZE) return;
+    h = (h1 + (i*h2)) % TABLE_SIZE; //slot function for double hasing
+	}
+	addToBucket(h,k); //add it to the hash table
+}
+
+
+function getInputValue() {
+  var s = document.getElementById('hashin').value;
+	var j = parseInt(s);
+	makeBucketsBlack();
+	if ( !isNaN(j) ) {
+		hashTableInsert(j);
+	}
+	document.getElementById('hashin').value="";
+}
+</script>
+
+</head>
+<body onload="initElement();">
+ 
+<div id="header">
+<h1>
+Project 3: Double Hashing Implementation
+</h1>
+</div>
+
+
+<h2>
+Hash Table
+</h2>
+
+<div id="hashtablecontainer">
+<div style="float: left; width: 2em;">&nbsp;</div>
+
+
+</div>
+
+
+<h2>Input</h2>
+
+<div style="float: left; width: 2em;">&nbsp;</div>
+
+<table>
+
+<tr>
+<th style="background: #cfc; width: 10em;">Value
+<td><input type="text" id="hashin">
+<tr>
+<th style="border: #FF8EC9 2px; background: #FFCFE8;"
+onclick="getInputValue()">&nbsp;Enter&nbsp;
+<th style="border: #FF8EC9 2px; background: #FFCFE8;"
+onclick="clearInputValues()">&nbsp;Clear&nbsp;
+</table>
+
+<h2>
+Explanation
+</h2>
+
+<p>
+This is an illustration of using open addressing for hash tables with double hashing as the solution to collisions. The collided cells will have the value shown in white. The newly inserted elements are colored blue. The hash table will stop inputting in new elements when the table is filled. - Hanna Liv Ekholdt
+</p>
+</body>
+</html>
